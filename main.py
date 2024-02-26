@@ -52,15 +52,12 @@ class App(tk.Frame):
         self.text.tag_config("blue", foreground="blue")
         self.text.tag_config("green", foreground="green")
         self.text.tag_config("red", foreground="red")
+        self.text.tag_config("grey", foreground="grey")
         self.text.insert(1.0, self.convert_text())
         self.change_color('blue')
         self.text.tag_add("center", 1.0, "end")
         self.text.config(state=tk.DISABLED)
         self.text.grid(row=1, column=0, )
-
-        # # Configure the text widget with certain color
-        # text.tag_config("start", foreground="red")
-        # text.tag_add("start", "1.6", "1.12")
 
         self.entry = tk.Entry(width=50, justify='center', font=FONT)
         self.entry.grid(row=2, column=0, pady=(0, 10))
@@ -94,7 +91,6 @@ class App(tk.Frame):
     # Takes entered word and updates scores if correct
     # Also starts timer if not already started
     def take_word(self, e):
-        previous_word = self.current_word
         if len(self.entry.get()) != 0:
             if self.time_left == 60:
                 self.count_down()
@@ -125,7 +121,8 @@ class App(tk.Frame):
             self.text.config(state=tk.NORMAL)
             self.text.delete('1.0', tk.END)
             self.text.insert(1.0, self.convert_text())
-            self.text.tag_add("center", 1.0, "end")
+            self.text.tag_add("center", '1.0', "end")
+            self.text.tag_add("grey", "1.0","1.end ")
             self.text.config(state=tk.DISABLED)
         return next_line
 
@@ -140,6 +137,8 @@ class App(tk.Frame):
             next_word = self.current_line[0]
         return next_word
 
+    # Change color of current or previous word
+    # Color changed based on tag arg
     def change_color(self, tag):
         line_index = self.current_line_num + 1
         char_index = self.current_char_index
