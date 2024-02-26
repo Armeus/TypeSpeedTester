@@ -1,6 +1,8 @@
 # Imports
 import random
 import tkinter as tk
+import sys
+import os
 
 FONT = ("Helvetica", 16)
 
@@ -8,6 +10,9 @@ FONT = ("Helvetica", 16)
 class App(tk.Frame):
     # Tkinter initialization
     def __init__(self, parent):
+
+        parent.bind('<space>', self.take_word)
+
         # Creates the list of words from txt file
         word_list = []
         with open('1-1000.txt') as file:
@@ -52,6 +57,8 @@ class App(tk.Frame):
         self.scoreboard = tk.Label(width=75, height=1, font=("Helvetica", 10))
         self.scoreboard.config(text=f'CPM: {self.char_count} \tWPM: {self.word_count} \tTime left: {self.time_left}')
         self.scoreboard.grid(row=0, column=0, pady=(20, 0))
+        self.reset = tk.Button(text='Reset', fg='red', command=restart_program)
+        self.reset.grid(row=3, column=0, pady=(20, 0))
 
     # Creates a new line of text (6 words separated by a space)
     def create_line(self, index):
@@ -75,14 +82,11 @@ class App(tk.Frame):
         if len(self.entry.get()) != 0:
             if self.time_left == 60:
                 self.count_down()
-            print(self.entry.get())
-            print(self.current_word)
             if self.entry.get() == f'{self.current_word} ':
                 self.word_count += 1
                 self.char_count += len(self.entry.get())
             self.current_word = self.get_next_word()
             self.entry.delete(0, 'end')
-            print(self.word_count, self.char_count)
 
     # Returns next line as list of words
     def get_next_line(self):
@@ -134,9 +138,14 @@ def main():
     root.title("Type Speed Tester")
     root.minsize(width=500, height=300)
     root.config(padx=20, pady=20, background='grey')
-    app = App(root)
-    root.bind('<space>', app.take_word)
+    App(root)
     root.mainloop()
+
+
+#    Restarts Program
+def restart_program():
+    python = sys.executable
+    os.execl(python, python, * sys.argv)
 
 
 if __name__ == "__main__":
